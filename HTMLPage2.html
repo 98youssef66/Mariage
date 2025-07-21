@@ -1,0 +1,948 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب ميزانية الأعراس - بالدرهم المغربي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #6d4c41;
+            --secondary: #d7ccc8;
+            --accent: #c19a6b;
+            --light: #f5f5f5;
+            --dark: #3e2723;
+            --text: #333333;
+            --gold: #d4af37;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Space Grotesk', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(233, 233, 233, 0.1) 0%, rgba(210, 210, 210, 0.1) 90%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.5rem;
+            color: var(--dark);
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        h1::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+            margin: 10px auto;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--accent);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 25px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(193, 154, 107, 0.3);
+        }
+
+        .section:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-align: right;
+            padding: 12px 15px;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--secondary);
+            text-align: right;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(215, 204, 200, 0.2);
+        }
+
+        tr:hover {
+            background-color: rgba(193, 154, 107, 0.1);
+        }
+
+        input, select, button, textarea {
+            font-family: inherit;
+            padding: 8px 12px;
+            border: 1px solid var(--secondary);
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(193, 154, 107, 0.3);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        button.secondary {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        button.secondary:hover {
+            background-color: #bcaaa4;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .btn-gold:hover {
+            background-color: #c9a227;
+        }
+
+        .summary {
+            background-color: rgba(109, 76, 65, 0.05);
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted var(--secondary);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-total {
+            font-weight: 600;
+            font-size: 1.2em;
+            color: var(--primary);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--gold);
+        }
+
+        .currency {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .guests-count {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--dark);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-left: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-item label {
+            flex: 1;
+        }
+
+        .checkbox-item input[type="number"] {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .textarea-guests {
+            width: 100%;
+            min-height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-section {
+            display: none;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+
+        .pdf-table th {
+            background-color: #f2f2f2;
+        }
+
+        .guest-table {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .guest-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px;
+        }
+
+        .guest-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        @keyframes highlight {
+            from { background-color: rgba(193, 154, 107, 0.3); }
+            to { background-color: transparent; }
+        }
+
+        .highlight {
+            animation: highlight 1.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>حساب ميزانية العرس</h1>
+        
+        <div class="section">
+            <h2>قائمة المدعوين</h2>
+            <table class="guest-table" id="guestsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم المدعو</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو"></td>
+                        <td><button class="secondary remove-guest">حذف</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 10px;">
+                <button id="addGuest">+ إضافة مدعو</button>
+                <button id="pasteGuests" class="secondary">لصق قائمة مدعوين</button>
+            </div>
+            <div style="margin-top: 15px; font-size: 1.1em;">
+                <span class="guests-count">0</span>عدد المدعوين الإجمالي
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>الأكل والمشروبات</h2>
+            <table id="foodTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم الصنف</th>
+                        <th>الكمية</th>
+                        <th>ثمن الواحدة (MAD)</th>
+                        <th>المجموع (MAD)</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="food-name" placeholder="اسم الصنف"></td>
+                        <td><input type="number" class="food-quantity" min="0.1" value="1" step="0.1"></td>
+                        <td><input type="number" class="food-price" min="0" value="0" step="10"></td>
+                        <td class="food-total currency">0 MAD</td>
+                        <td><button class="secondary remove-food">حذف</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="addFood" style="margin-top: 10px;">+ إضافة صنف</button>
+        </div>
+
+        <div class="section">
+            <h2>الخدمات الإضافية</h2>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="decoration" class="service-checkbox">
+                    <label for="decoration">التزيين</label>
+                    <input type="number" id="decoration-price" class="service-price" min="0" value="0" step="100" disabled>
+                    <span class="currency">MAD</span>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="music" class="service-checkbox">
+                    <label for="music">الموسيقى</label>
+                    <input type="number" id="music-price" class="service-price" min="0" value="0" step="100" disabled>
+                    <span class="currency">MAD</span>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="photography" class="service-checkbox">
+                    <label for="photography">التصوير</label>
+                    <input type="number" id="photography-price" class="service-price" min="0" value="0" step="100" disabled>
+                    <span class="currency">MAD</span>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="venue" class="service-checkbox">
+                    <label for="venue">القاعة</label>
+                    <input type="number" id="venue-price" class="service-price" min="0" value="0" step="500" disabled>
+                    <span class="currency">MAD</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>حساب الطاولات</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div>
+                    <label for="guestsPerTable">عدد الضيوف في كل طاولة:</label>
+                    <input type="number" id="guestsPerTable" min="1" value="8" style="width: 70px;">
+                </div>
+                <div id="tablesResult" style="font-size: 1.1em;">
+                    <span class="guests-count">0</span>عدد الطاولات المطلوبة
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>ملخص الميزانية</h2>
+            <div class="summary" id="summarySection">
+                <div class="summary-item">
+                    <span>عدد المدعوين:</span>
+                    <span id="totalGuests" class="currency">0</span>
+                </div>
+                <div class="summary-item">
+                    <span>عدد الطاولات:</span>
+                    <span id="totalTables" class="currency">0</span>
+                </div>
+                <div class="summary-item">
+                    <span>تكاليف الأكل والمشروبات:</span>
+                    <span id="foodTotal" class="currency">0 MAD</span>
+                </div>
+                <div class="summary-item">
+                    <span>الخدمات الإضافية:</span>
+                    <span id="servicesTotal" class="currency">0 MAD</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>المجموع الكلي:</span>
+                    <span id="grandTotal" class="currency">0 MAD</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden section for PDF content -->
+        <div id="pdfContent" class="pdf-section">
+            <h1>ملخص ميزانية العرس</h1>
+            <h2>قائمة المدعوين</h2>
+            <table class="pdf-table" id="pdfGuestsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>اسم المدعو</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            
+            <h2>تفاصيل الأكل والمشروبات</h2>
+            <table class="pdf-table" id="pdfFoodTable">
+                <thead>
+                    <tr>
+                        <th>اسم الصنف</th>
+                        <th>الكمية</th>
+                        <th>ثمن الواحدة (MAD)</th>
+                        <th>المجموع (MAD)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            
+            <h2>الخدمات الإضافية</h2>
+            <div id="pdfServicesList"></div>
+            
+            <h2>ملخص التكاليف</h2>
+            <div id="pdfSummary"></div>
+        </div>
+
+        <div class="actions">
+            <button id="resetAll" class="secondary">إعادة تعيين الكل</button>
+            <button id="exportPdf" class="btn-gold">تحميل PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // DOM Elements
+        const guestsTable = document.getElementById('guestsTable').getElementsByTagName('tbody')[0];
+        const addGuestBtn = document.getElementById('addGuest');
+        const pasteGuestsBtn = document.getElementById('pasteGuests');
+        const guestsCountDisplay = document.querySelector('.guests-count');
+        
+        const foodTable = document.getElementById('foodTable').getElementsByTagName('tbody')[0];
+        const addFoodBtn = document.getElementById('addFood');
+        
+        const serviceCheckboxes = document.querySelectorAll('.service-checkbox');
+        const servicePrices = document.querySelectorAll('.service-price');
+        
+        const guestsPerTableInput = document.getElementById('guestsPerTable');
+        const tablesResultDisplay = document.getElementById('tablesResult');
+        
+        const totalGuestsDisplay = document.getElementById('totalGuests');
+        const totalTablesDisplay = document.getElementById('totalTables');
+        const foodTotalDisplay = document.getElementById('foodTotal');
+        const servicesTotalDisplay = document.getElementById('servicesTotal');
+        const grandTotalDisplay = document.getElementById('grandTotal');
+        
+        const resetAllBtn = document.getElementById('resetAll');
+        const exportPdfBtn = document.getElementById('exportPdf');
+        const summarySection = document.getElementById('summarySection');
+        
+        // PDF Elements
+        const pdfContent = document.getElementById('pdfContent');
+        const pdfGuestsTable = document.getElementById('pdfGuestsTable').getElementsByTagName('tbody')[0];
+        const pdfFoodTable = document.getElementById('pdfFoodTable').getElementsByTagName('tbody')[0];
+        const pdfServicesList = document.getElementById('pdfServicesList');
+        const pdfSummary = document.getElementById('pdfSummary');
+
+        // Variables
+        let guestsCount = 0;
+        let foodTotal = 0;
+        let servicesTotal = 0;
+        let grandTotal = 0;
+        let tablesCount = 0;
+
+        // Initialize the app
+        function init() {
+            // Add initial rows
+            addGuestRow();
+            addFoodRow();
+            addFoodRow(); // Add second food row by default
+            
+            // Set up event listeners for the first food row
+            setupFoodRowCalculations(foodTable.rows[0]);
+            
+            // Calculate initial values
+            updateGuestsCount();
+            updateTotals();
+            
+            // Add event listeners
+            addEventListeners();
+        }
+
+        // Add event listeners
+        function addEventListeners() {
+            // Guests table
+            addGuestBtn.addEventListener('click', addGuestRow);
+            pasteGuestsBtn.addEventListener('click', pasteGuestsList);
+            
+            // Food table
+            addFoodBtn.addEventListener('click', addFoodRow);
+            
+            // Services
+            serviceCheckboxes.forEach((checkbox, index) => {
+                checkbox.addEventListener('change', function() {
+                    servicePrices[index].disabled = !this.checked;
+                    updateServicesTotal();
+                });
+                
+                servicePrices[index].addEventListener('input', updateServicesTotal);
+            });
+            
+            // Tables calculation
+            guestsPerTableInput.addEventListener('input', calculateTables);
+            
+            // Reset and export
+            resetAllBtn.addEventListener('click', resetAll);
+            exportPdfBtn.addEventListener('click', exportToPdf);
+        }
+
+        // Guests functions
+        function addGuestRow(name = '') {
+            const rowCount = guestsTable.rows.length + 1;
+            const row = guestsTable.insertRow();
+            
+            row.innerHTML = `
+                <td>${rowCount}</td>
+                <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو" value="${name}"></td>
+                <td><button class="secondary remove-guest">حذف</button></td>
+            `;
+            
+            row.querySelector('.guest-name').addEventListener('input', updateGuestsCount);
+            row.querySelector('.remove-guest').addEventListener('click', function() {
+                row.remove();
+                updateRowNumbers(guestsTable);
+                updateGuestsCount();
+            });
+            
+            updateGuestsCount();
+        }
+
+        function pasteGuestsList() {
+            const guestsList = prompt('الصق قائمة المدعوين (اسم لكل سطر):');
+            if (guestsList) {
+                const guests = guestsList.split('\n').filter(name => name.trim() !== '');
+                
+                // Clear existing rows except the first one
+                while (guestsTable.rows.length > 1) {
+                    guestsTable.deleteRow(1);
+                }
+                
+                // Add new rows
+                guests.forEach(name => {
+                    addGuestRow(name.trim());
+                });
+                
+                // Update the first row if it's empty
+                const firstRowInput = guestsTable.rows[0].querySelector('.guest-name');
+                if (firstRowInput && firstRowInput.value === '' && guests.length > 0) {
+                    firstRowInput.value = guests[0].trim();
+                    if (guests.length > 1) {
+                        updateGuestsCount();
+                    }
+                }
+            }
+        }
+
+        function updateGuestsCount() {
+            const nameInputs = document.querySelectorAll('.guest-name');
+            guestsCount = 0;
+            
+            nameInputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    guestsCount++;
+                }
+            });
+            
+            guestsCountDisplay.textContent = guestsCount;
+            totalGuestsDisplay.textContent = guestsCount;
+            calculateTables();
+        }
+
+        // Food functions
+        function addFoodRow() {
+            const rowCount = foodTable.rows.length + 1;
+            const row = foodTable.insertRow();
+            
+            row.innerHTML = `
+                <td>${rowCount}</td>
+                <td><input type="text" class="food-name" placeholder="اسم الصنف"></td>
+                <td><input type="number" class="food-quantity" min="0.1" value="1" step="0.1"></td>
+                <td><input type="number" class="food-price" min="0" value="0" step="10"></td>
+                <td class="food-total currency">0 MAD</td>
+                <td><button class="secondary remove-food">حذف</button></td>
+            `;
+            
+            setupFoodRowCalculations(row);
+        }
+
+        function setupFoodRowCalculations(row) {
+            const quantityInput = row.querySelector('.food-quantity');
+            const priceInput = row.querySelector('.food-price');
+            const totalCell = row.querySelector('.food-total');
+            
+            const calculateRowTotal = () => {
+                const quantity = parseFloat(quantityInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                const total = quantity * price;
+                totalCell.textContent = total.toLocaleString('ar') + ' MAD';
+                updateFoodTotal();
+            };
+            
+            quantityInput.addEventListener('input', calculateRowTotal);
+            priceInput.addEventListener('input', calculateRowTotal);
+            
+            // Calculate immediately when row is added
+            calculateRowTotal();
+            
+            row.querySelector('.remove-food').addEventListener('click', function() {
+                row.remove();
+                updateRowNumbers(foodTable);
+                updateFoodTotal();
+            });
+        }
+
+        function updateFoodTotal() {
+            const totalCells = document.querySelectorAll('.food-total');
+            foodTotal = 0;
+            
+            totalCells.forEach(cell => {
+                const value = parseFloat(cell.textContent.replace(/[^0-9.]/g, '')) || 0;
+                foodTotal += value;
+            });
+            
+            foodTotalDisplay.textContent = foodTotal.toLocaleString('ar') + ' MAD';
+            updateGrandTotal();
+        }
+
+        // Services functions
+        function updateServicesTotal() {
+            servicesTotal = 0;
+            
+            serviceCheckboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const price = parseFloat(servicePrices[index].value) || 0;
+                    servicesTotal += price;
+                }
+            });
+            
+            servicesTotalDisplay.textContent = servicesTotal.toLocaleString('ar') + ' MAD';
+            updateGrandTotal();
+        }
+
+        // Tables calculation
+        function calculateTables() {
+            const guestsPerTable = parseInt(guestsPerTableInput.value) || 8;
+            tablesCount = Math.ceil(guestsCount / guestsPerTable);
+            
+            tablesResultDisplay.innerHTML = `
+                <span class="guests-count">${tablesCount}</span>عدد الطاولات المطلوبة
+            `;
+            totalTablesDisplay.textContent = tablesCount;
+        }
+
+        // Totals calculation
+        function updateTotals() {
+            updateFoodTotal();
+            updateServicesTotal();
+        }
+
+        function updateGrandTotal() {
+            grandTotal = foodTotal + servicesTotal;
+            grandTotalDisplay.textContent = grandTotal.toLocaleString('ar') + ' MAD';
+            
+            // Add highlight animation
+            summarySection.classList.add('highlight');
+            setTimeout(() => {
+                summarySection.classList.remove('highlight');
+            }, 1500);
+        }
+
+        // Utility functions
+        function updateRowNumbers(table) {
+            const rows = table.rows;
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[0].textContent = i + 1;
+            }
+        }
+
+        // Prepare PDF content
+        function preparePdfContent() {
+            // Prepare guests table
+            pdfGuestsTable.innerHTML = '';
+            const guestRows = document.querySelectorAll('#guestsTable tbody tr');
+            guestRows.forEach((row, index) => {
+                const name = row.querySelector('.guest-name').value;
+                if (name.trim() !== '') {
+                    const newRow = pdfGuestsTable.insertRow();
+                    newRow.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${name}</td>
+                    `;
+                }
+            });
+            
+            // Prepare food table
+            pdfFoodTable.innerHTML = '';
+            const foodRows = document.querySelectorAll('#foodTable tbody tr');
+            foodRows.forEach(row => {
+                const name = row.querySelector('.food-name').value;
+                const quantity = row.querySelector('.food-quantity').value;
+                const price = row.querySelector('.food-price').value;
+                const total = row.querySelector('.food-total').textContent;
+                
+                if (name) {
+                    const newRow = pdfFoodTable.insertRow();
+                    newRow.innerHTML = `
+                        <td>${name}</td>
+                        <td>${quantity}</td>
+                        <td>${price} MAD</td>
+                        <td>${total}</td>
+                    `;
+                }
+            });
+            
+            // Prepare services list
+            let servicesHtml = '<div style="margin-bottom: 20px;">';
+            serviceCheckboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const serviceName = checkbox.nextElementSibling.textContent;
+                    const servicePrice = servicePrices[index].value;
+                    servicesHtml += `
+                        <div style="padding: 5px 0; border-bottom: 1px dotted #eee;">
+                            ${serviceName}: ${servicePrice} MAD
+                        </div>
+                    `;
+                }
+            });
+            servicesHtml += '</div>';
+            pdfServicesList.innerHTML = servicesHtml;
+            
+            // Prepare summary
+            pdfSummary.innerHTML = `
+                <div style="margin-bottom: 10px;">
+                    <strong>عدد المدعوين:</strong> ${guestsCount}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>عدد الطاولات:</strong> ${tablesCount} (${guestsPerTableInput.value} ضيف لكل طاولة)
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>تكاليف الأكل والمشروبات:</strong> ${foodTotalDisplay.textContent}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>الخدمات الإضافية:</strong> ${servicesTotalDisplay.textContent}
+                </div>
+                <div style="margin-top: 15px; font-size: 1.2em; font-weight: bold; border-top: 2px solid #d4af37; padding-top: 10px;">
+                    <strong>المجموع الكلي:</strong> ${grandTotalDisplay.textContent}
+                </div>
+            `;
+        }
+
+        // Reset all
+        function resetAll() {
+            // Reset guests table
+            while (guestsTable.rows.length > 1) {
+                guestsTable.deleteRow(1);
+            }
+            guestsTable.rows[0].querySelector('.guest-name').value = '';
+            guestsCount = 0;
+            guestsCountDisplay.textContent = '0';
+            totalGuestsDisplay.textContent = '0';
+            
+            // Reset food table
+            while (foodTable.rows.length > 1) {
+                foodTable.deleteRow(1);
+            }
+            const firstFoodRow = foodTable.rows[0];
+            firstFoodRow.querySelector('.food-name').value = '';
+            firstFoodRow.querySelector('.food-quantity').value = '1';
+            firstFoodRow.querySelector('.food-price').value = '0';
+            firstFoodRow.querySelector('.food-total').textContent = '0 MAD';
+            foodTotal = 0;
+            foodTotalDisplay.textContent = '0 MAD';
+            
+            // Reset services
+            serviceCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            servicePrices.forEach(priceInput => {
+                priceInput.value = '0';
+                priceInput.disabled = true;
+            });
+            servicesTotal = 0;
+            servicesTotalDisplay.textContent = '0 MAD';
+            
+            // Reset tables
+            guestsPerTableInput.value = '8';
+            tablesCount = 0;
+            tablesResultDisplay.innerHTML = `
+                <span class="guests-count">0</span>عدد الطاولات المطلوبة
+            `;
+            totalTablesDisplay.textContent = '0';
+            
+            // Reset totals
+            grandTotal = 0;
+            grandTotalDisplay.textContent = '0 MAD';
+        }
+
+        // Export to PDF
+        function exportToPdf() {
+            preparePdfContent();
+            
+            // Show the PDF content temporarily for html2canvas
+            pdfContent.style.display = 'block';
+            
+            html2canvas(pdfContent, {
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                // Hide the PDF content again
+                pdfContent.style.display = 'none';
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm'
+                });
+                
+                const imgWidth = 190;
+                const pageHeight = 280;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
+                
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save('ملخص_ميزانية_العرس.pdf');
+            }).catch(error => {
+                console.error('Error generating PDF:', error);
+                alert('حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+                pdfContent.style.display = 'none';
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
