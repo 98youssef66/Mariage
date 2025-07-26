@@ -237,6 +237,29 @@
             height: 20px;
             accent-color: var(--gold);
             flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid var(--primary);
+            border-radius: 3px;
+            background-color: white;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            background-color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .checkbox-item label {
@@ -299,7 +322,13 @@
         }
 
         .food-table td:nth-child(6), .food-table th:nth-child(6) {
-            width: 70px;
+            width: 90px;
+        }
+        
+        .remove-food {
+            padding: 8px 15px;
+            width: 100%;
+            min-width: 80px;
         }
 
         @keyframes highlight {
@@ -627,7 +656,7 @@
 
             row.innerHTML = `
                 <td>${rowCount}</td>
-                <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو" value="${name}"></td>
+                <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو" value=""></td>
                 <td><button class="secondary remove-guest">حذف</button></td>
             `;
 
