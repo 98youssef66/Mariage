@@ -1,12 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حساب ميزانية الأعراس - بالدرهم المغربي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>حساب ميزانية العرس</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -24,107 +24,108 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Montserrat', 'Space Grotesk', sans-serif;
+            font-family: 'Tajawal', sans-serif;
             background-color: var(--light);
             color: var(--text);
             line-height: 1.6;
-            padding: 20px;
-            background-image: radial-gradient(circle at 10% 20%, rgba(233, 233, 233, 0.1) 0%, rgba(210, 210, 210, 0.1) 90%);
+            padding: 10px;
+            touch-action: manipulation;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
+            padding-bottom: 20px;
         }
 
         h1, h2, h3 {
             color: var(--primary);
-            margin-bottom: 15px;
-            font-weight: 600;
-            position: relative;
+            margin-bottom: 12px;
+            font-weight: 700;
         }
 
         h1 {
             text-align: center;
-            padding: 20px 0;
-            font-size: 2.5rem;
+            padding: 15px 0;
+            font-size: 1.8rem;
             color: var(--dark);
             border-bottom: 2px solid var(--accent);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         h1::after {
             content: "";
             display: block;
-            width: 100px;
+            width: 80px;
             height: 3px;
             background: var(--gold);
-            margin: 10px auto;
+            margin: 8px auto;
         }
 
         h2 {
-            font-size: 1.8rem;
-            padding-bottom: 10px;
+            font-size: 1.4rem;
+            padding-bottom: 8px;
             border-bottom: 1px dashed var(--accent);
         }
 
         h3 {
-            font-size: 1.4rem;
-            margin-top: 25px;
+            font-size: 1.2rem;
+            margin-top: 15px;
         }
 
         .section {
             background-color: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(193, 154, 107, 0.3);
-        }
-
-        .section:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 0.9em;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            table-layout: fixed;
         }
 
         th {
             background-color: var(--primary);
             color: white;
             text-align: right;
-            padding: 12px 15px;
+            padding: 10px 8px;
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         td {
-            padding: 10px 15px;
+            padding: 8px;
             border-bottom: 1px solid var(--secondary);
             text-align: right;
+            word-break: break-word;
+            font-size: 0.9rem;
         }
 
         tr:nth-child(even) {
             background-color: rgba(215, 204, 200, 0.2);
         }
 
-        tr:hover {
-            background-color: rgba(193, 154, 107, 0.1);
-        }
-
         input, select, button, textarea {
             font-family: inherit;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 1px solid var(--secondary);
-            border-radius: 5px;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            width: 100%;
+            -webkit-appearance: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -138,16 +139,15 @@
             color: white;
             border: none;
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 12px 15px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin: 5px 0;
+            font-size: 0.95rem;
+            border-radius: 8px;
         }
 
-        button:hover {
+        button:active {
             background-color: var(--dark);
-            transform: translateY(-2px);
         }
 
         button.secondary {
@@ -155,7 +155,7 @@
             color: var(--dark);
         }
 
-        button.secondary:hover {
+        button.secondary:active {
             background-color: #bcaaa4;
         }
 
@@ -165,24 +165,25 @@
             font-weight: 600;
         }
 
-        .btn-gold:hover {
+        .btn-gold:active {
             background-color: #c9a227;
         }
 
         .summary {
             background-color: rgba(109, 76, 65, 0.05);
             border-left: 4px solid var(--gold);
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
         }
 
         .summary-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
             border-bottom: 1px dotted var(--secondary);
+            font-size: 0.95rem;
         }
 
         .summary-item:last-child {
@@ -193,15 +194,15 @@
 
         .summary-total {
             font-weight: 600;
-            font-size: 1.2em;
+            font-size: 1.1rem;
             color: var(--primary);
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 2px solid var(--gold);
         }
 
         .currency {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Tajawal', sans-serif;
             color: var(--primary);
             font-weight: 500;
         }
@@ -210,29 +211,32 @@
             display: inline-block;
             background-color: var(--gold);
             color: var(--dark);
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-weight: 600;
-            margin-right: 10px;
+            margin-left: 8px;
         }
 
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .checkbox-item {
             display: flex;
             align-items: center;
+            gap: 8px;
+            padding: 8px 0;
         }
 
         .checkbox-item input[type="checkbox"] {
-            margin-left: 10px;
-            width: 18px;
-            height: 18px;
+            margin-left: 0;
+            width: 20px;
+            height: 20px;
             accent-color: var(--gold);
+            flex-shrink: 0;
         }
 
         .checkbox-item label {
@@ -241,105 +245,61 @@
 
         .checkbox-item input[type="number"] {
             width: 80px;
-            margin-right: 10px;
+            margin-right: 0;
+            flex-shrink: 0;
         }
 
         .actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .input-group label {
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 500;
         }
 
-        .textarea-guests {
-            width: 100%;
-            min-height: 100px;
-            margin-bottom: 10px;
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .buttons-row button {
+            flex: 1;
         }
 
         .pdf-section {
             display: none;
         }
 
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
+        .guest-table td:nth-child(1), .guest-table th:nth-child(1) {
+            width: 40px;
         }
 
-        .pdf-table th, .pdf-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: right;
+        .guest-table td:nth-child(3), .guest-table th:nth-child(3) {
+            width: 80px;
         }
 
-        .pdf-table th {
-            background-color: #f2f2f2;
+        .food-table td:nth-child(1), .food-table th:nth-child(1) {
+            width: 40px;
         }
 
-        .guest-table {
-            width: 100%;
-            margin-bottom: 15px;
+        .food-table td:nth-child(3), .food-table th:nth-child(3),
+        .food-table td:nth-child(4), .food-table th:nth-child(4) {
+            width: 80px;
         }
 
-        .guest-table th {
-            background-color: var(--primary);
-            color: white;
-            padding: 10px;
-        }
-
-        .guest-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid var(--secondary);
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .section {
-                padding: 15px;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 8px 10px;
-            }
-
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-            }
+        .food-table td:nth-child(6), .food-table th:nth-child(6) {
+            width: 70px;
         }
 
         @keyframes highlight {
@@ -350,6 +310,56 @@
         .highlight {
             animation: highlight 1.5s;
         }
+
+        @media screen and (min-width: 576px) {
+            .container {
+                padding: 10px;
+                max-width: 960px;
+            }
+            
+            .actions {
+                flex-direction: row;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 575px) {
+            .container {
+                padding: 10px 5px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            td, th {
+                padding: 8px 4px;
+            }
+
+            .food-table td:nth-child(3) input,
+            .food-table td:nth-child(4) input {
+                padding: 8px 4px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .section {
+                padding: 10px;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -358,55 +368,60 @@
         
         <div class="section">
             <h2>قائمة المدعوين</h2>
-            <table class="guest-table" id="guestsTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>اسم المدعو</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو"></td>
-                        <td><button class="secondary remove-guest">حذف</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="margin-top: 10px;">
-                <button id="addGuest">+ إضافة مدعو</button>
-                <button id="pasteGuests" class="secondary">لصق قائمة مدعوين</button>
+            <div style="overflow-x: auto;">
+                <table class="guest-table" id="guestsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم المدعو</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو"></td>
+                            <td><button class="secondary remove-guest">حذف</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div style="margin-top: 15px; font-size: 1.1em;">
-                <span class="guests-count">0</span>عدد المدعوين الإجمالي
+            <div class="buttons-row">
+                <button id="addGuest">+ إضافة مدعو</button>
+                <button id="pasteGuests" class="secondary">لصق قائمة</button>
+            </div>
+            <div style="margin-top: 15px; font-size: 1.1rem; text-align: center;">
+                <span>عدد المدعوين الإجمالي</span>
+                <span class="guests-count">0</span>
             </div>
         </div>
 
         <div class="section">
             <h2>الأكل والمشروبات</h2>
-            <table id="foodTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>اسم الصنف</th>
-                        <th>الكمية</th>
-                        <th>ثمن الواحدة (MAD)</th>
-                        <th>المجموع (MAD)</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><input type="text" class="food-name" placeholder="اسم الصنف"></td>
-                        <td><input type="number" class="food-quantity" min="0.1" value="1" step="0.1"></td>
-                        <td><input type="number" class="food-price" min="0" value="0" step="10"></td>
-                        <td class="food-total currency">0 MAD</td>
-                        <td><button class="secondary remove-food">حذف</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="overflow-x: auto;">
+                <table class="food-table" id="foodTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الصنف</th>
+                            <th>الكمية</th>
+                            <th>ثمن الواحدة (MAD)</th>
+                            <th>المجموع (MAD)</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" class="food-name" placeholder="اسم الصنف"></td>
+                            <td><input type="number" class="food-quantity" min="0.1" value="1" step="0.1"></td>
+                            <td><input type="number" class="food-price" min="0" value="0" step="10"></td>
+                            <td class="food-total currency">0 MAD</td>
+                            <td><button class="secondary remove-food">حذف</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <button id="addFood" style="margin-top: 10px;">+ إضافة صنف</button>
         </div>
 
@@ -442,13 +457,14 @@
 
         <div class="section">
             <h2>حساب الطاولات</h2>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="input-group">
                     <label for="guestsPerTable">عدد الضيوف في كل طاولة:</label>
-                    <input type="number" id="guestsPerTable" min="1" value="8" style="width: 70px;">
+                    <input type="number" id="guestsPerTable" min="1" value="8">
                 </div>
-                <div id="tablesResult" style="font-size: 1.1em;">
-                    <span class="guests-count">0</span>عدد الطاولات المطلوبة
+                <div id="tablesResult" style="text-align: center; font-size: 1.1rem;">
+                    <span>عدد الطاولات المطلوبة</span>
+                    <span class="guests-count">0</span>
                 </div>
             </div>
         </div>
@@ -564,18 +580,15 @@
 
         // Initialize the app
         function init() {
-            // Add initial rows
-            addGuestRow();
-            addFoodRow();
-            addFoodRow(); // Add second food row by default
-            
+            // لا داعي لإضافة صفوف افتراضية هنا لأن الـ HTML يحتوي عليها بالفعل
+
             // Set up event listeners for the first food row
             setupFoodRowCalculations(foodTable.rows[0]);
-            
+
             // Calculate initial values
             updateGuestsCount();
             updateTotals();
-            
+
             // Add event listeners
             addEventListeners();
         }
@@ -585,23 +598,23 @@
             // Guests table
             addGuestBtn.addEventListener('click', addGuestRow);
             pasteGuestsBtn.addEventListener('click', pasteGuestsList);
-            
+
             // Food table
             addFoodBtn.addEventListener('click', addFoodRow);
-            
+
             // Services
             serviceCheckboxes.forEach((checkbox, index) => {
                 checkbox.addEventListener('change', function() {
                     servicePrices[index].disabled = !this.checked;
                     updateServicesTotal();
                 });
-                
+
                 servicePrices[index].addEventListener('input', updateServicesTotal);
             });
-            
+
             // Tables calculation
             guestsPerTableInput.addEventListener('input', calculateTables);
-            
+
             // Reset and export
             resetAllBtn.addEventListener('click', resetAll);
             exportPdfBtn.addEventListener('click', exportToPdf);
@@ -611,20 +624,24 @@
         function addGuestRow(name = '') {
             const rowCount = guestsTable.rows.length + 1;
             const row = guestsTable.insertRow();
-            
+
             row.innerHTML = `
                 <td>${rowCount}</td>
                 <td><input type="text" class="guest-name" placeholder="أدخل اسم المدعو" value="${name}"></td>
                 <td><button class="secondary remove-guest">حذف</button></td>
             `;
-            
+
             row.querySelector('.guest-name').addEventListener('input', updateGuestsCount);
             row.querySelector('.remove-guest').addEventListener('click', function() {
                 row.remove();
                 updateRowNumbers(guestsTable);
                 updateGuestsCount();
+                // إذا أصبح الجدول فارغًا، أضف صف جديد تلقائيًا
+                if (guestsTable.rows.length === 0) {
+                    addGuestRow();
+                }
             });
-            
+
             updateGuestsCount();
         }
 
@@ -632,39 +649,31 @@
             const guestsList = prompt('الصق قائمة المدعوين (اسم لكل سطر):');
             if (guestsList) {
                 const guests = guestsList.split('\n').filter(name => name.trim() !== '');
-                
-                // Clear existing rows except the first one
-                while (guestsTable.rows.length > 1) {
-                    guestsTable.deleteRow(1);
+
+                // امسح جميع الصفوف
+                while (guestsTable.rows.length > 0) {
+                    guestsTable.deleteRow(0);
                 }
-                
-                // Add new rows
+
+                // أضف كل اسم كصف جديد
                 guests.forEach(name => {
                     addGuestRow(name.trim());
                 });
-                
-                // Update the first row if it's empty
-                const firstRowInput = guestsTable.rows[0].querySelector('.guest-name');
-                if (firstRowInput && firstRowInput.value === '' && guests.length > 0) {
-                    firstRowInput.value = guests[0].trim();
-                    if (guests.length > 1) {
-                        updateGuestsCount();
-                    }
-                }
+
+                updateGuestsCount();
             }
         }
 
         function updateGuestsCount() {
             const nameInputs = document.querySelectorAll('.guest-name');
             guestsCount = 0;
-            git mv HTMLPage2.html index.html
 
             nameInputs.forEach(input => {
                 if (input.value.trim() !== '') {
                     guestsCount++;
                 }
             });
-            
+
             guestsCountDisplay.textContent = guestsCount;
             totalGuestsDisplay.textContent = guestsCount;
             calculateTables();
@@ -674,7 +683,7 @@
         function addFoodRow() {
             const rowCount = foodTable.rows.length + 1;
             const row = foodTable.insertRow();
-            
+
             row.innerHTML = `
                 <td>${rowCount}</td>
                 <td><input type="text" class="food-name" placeholder="اسم الصنف"></td>
@@ -683,7 +692,7 @@
                 <td class="food-total currency">0 MAD</td>
                 <td><button class="secondary remove-food">حذف</button></td>
             `;
-            
+
             setupFoodRowCalculations(row);
         }
 
@@ -691,7 +700,7 @@
             const quantityInput = row.querySelector('.food-quantity');
             const priceInput = row.querySelector('.food-price');
             const totalCell = row.querySelector('.food-total');
-            
+
             const calculateRowTotal = () => {
                 const quantity = parseFloat(quantityInput.value) || 0;
                 const price = parseFloat(priceInput.value) || 0;
@@ -699,29 +708,33 @@
                 totalCell.textContent = total.toLocaleString('ar') + ' MAD';
                 updateFoodTotal();
             };
-            
+
             quantityInput.addEventListener('input', calculateRowTotal);
             priceInput.addEventListener('input', calculateRowTotal);
-            
+
             // Calculate immediately when row is added
             calculateRowTotal();
-            
+
             row.querySelector('.remove-food').addEventListener('click', function() {
                 row.remove();
                 updateRowNumbers(foodTable);
                 updateFoodTotal();
+                // إذا أصبح الجدول فارغًا، أضف صف جديد تلقائيًا
+                if (foodTable.rows.length === 0) {
+                    addFoodRow();
+                }
             });
         }
 
         function updateFoodTotal() {
             const totalCells = document.querySelectorAll('.food-total');
             foodTotal = 0;
-            
+
             totalCells.forEach(cell => {
                 const value = parseFloat(cell.textContent.replace(/[^0-9.]/g, '')) || 0;
                 foodTotal += value;
             });
-            
+
             foodTotalDisplay.textContent = foodTotal.toLocaleString('ar') + ' MAD';
             updateGrandTotal();
         }
@@ -729,14 +742,14 @@
         // Services functions
         function updateServicesTotal() {
             servicesTotal = 0;
-            
+
             serviceCheckboxes.forEach((checkbox, index) => {
                 if (checkbox.checked) {
                     const price = parseFloat(servicePrices[index].value) || 0;
                     servicesTotal += price;
                 }
             });
-            
+
             servicesTotalDisplay.textContent = servicesTotal.toLocaleString('ar') + ' MAD';
             updateGrandTotal();
         }
@@ -744,10 +757,11 @@
         // Tables calculation
         function calculateTables() {
             const guestsPerTable = parseInt(guestsPerTableInput.value) || 8;
-            tablesCount = Math.ceil(guestsCount / guestsPerTable);
-            
+            tablesCount = guestsCount === 0 ? 0 : Math.ceil(guestsCount / guestsPerTable);
+
             tablesResultDisplay.innerHTML = `
-                <span class="guests-count">${tablesCount}</span>عدد الطاولات المطلوبة
+                <span>عدد الطاولات المطلوبة</span>
+                <span class="guests-count">${tablesCount}</span>
             `;
             totalTablesDisplay.textContent = tablesCount;
         }
@@ -761,7 +775,7 @@
         function updateGrandTotal() {
             grandTotal = foodTotal + servicesTotal;
             grandTotalDisplay.textContent = grandTotal.toLocaleString('ar') + ' MAD';
-            
+
             // Add highlight animation
             summarySection.classList.add('highlight');
             setTimeout(() => {
@@ -792,7 +806,7 @@
                     `;
                 }
             });
-            
+
             // Prepare food table
             pdfFoodTable.innerHTML = '';
             const foodRows = document.querySelectorAll('#foodTable tbody tr');
@@ -801,7 +815,7 @@
                 const quantity = row.querySelector('.food-quantity').value;
                 const price = row.querySelector('.food-price').value;
                 const total = row.querySelector('.food-total').textContent;
-                
+
                 if (name) {
                     const newRow = pdfFoodTable.insertRow();
                     newRow.innerHTML = `
@@ -812,7 +826,7 @@
                     `;
                 }
             });
-            
+
             // Prepare services list
             let servicesHtml = '<div style="margin-bottom: 20px;">';
             serviceCheckboxes.forEach((checkbox, index) => {
@@ -828,7 +842,7 @@
             });
             servicesHtml += '</div>';
             pdfServicesList.innerHTML = servicesHtml;
-            
+
             // Prepare summary
             pdfSummary.innerHTML = `
                 <div style="margin-bottom: 10px;">
@@ -851,6 +865,10 @@
 
         // Reset all
         function resetAll() {
+            if (!confirm('هل أنت متأكد أنك تريد إعادة تعيين جميع البيانات؟')) {
+                return;
+            }
+
             // Reset guests table
             while (guestsTable.rows.length > 1) {
                 guestsTable.deleteRow(1);
@@ -859,7 +877,7 @@
             guestsCount = 0;
             guestsCountDisplay.textContent = '0';
             totalGuestsDisplay.textContent = '0';
-            
+
             // Reset food table
             while (foodTable.rows.length > 1) {
                 foodTable.deleteRow(1);
@@ -871,7 +889,7 @@
             firstFoodRow.querySelector('.food-total').textContent = '0 MAD';
             foodTotal = 0;
             foodTotalDisplay.textContent = '0 MAD';
-            
+
             // Reset services
             serviceCheckboxes.forEach(checkbox => {
                 checkbox.checked = false;
@@ -882,15 +900,16 @@
             });
             servicesTotal = 0;
             servicesTotalDisplay.textContent = '0 MAD';
-            
+
             // Reset tables
             guestsPerTableInput.value = '8';
             tablesCount = 0;
             tablesResultDisplay.innerHTML = `
-                <span class="guests-count">0</span>عدد الطاولات المطلوبة
+                <span>عدد الطاولات المطلوبة</span>
+                <span class="guests-count">0</span>
             `;
             totalTablesDisplay.textContent = '0';
-            
+
             // Reset totals
             grandTotal = 0;
             grandTotalDisplay.textContent = '0 MAD';
@@ -899,10 +918,10 @@
         // Export to PDF
         function exportToPdf() {
             preparePdfContent();
-            
+
             // Show the PDF content temporarily for html2canvas
             pdfContent.style.display = 'block';
-            
+
             html2canvas(pdfContent, {
                 scale: 2,
                 logging: false,
@@ -911,29 +930,29 @@
             }).then(canvas => {
                 // Hide the PDF content again
                 pdfContent.style.display = 'none';
-                
+
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm'
                 });
-                
+
                 const imgWidth = 190;
                 const pageHeight = 280;
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 10;
-                
+
                 pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
-                
+
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
-                
+
                 pdf.save('ملخص_ميزانية_العرس.pdf');
             }).catch(error => {
                 console.error('Error generating PDF:', error);
